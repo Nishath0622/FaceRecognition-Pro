@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual Environment
+venv/
+
+# React
+frontend/node_modules/
+
+# User data
+backend/dataset/
+backend/uploads/
+
+# Generated model files
+backend/embeddings.pkl
+backend/lbph_model.yml
+backend/names.pkl
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
