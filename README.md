@@ -1,51 +1,63 @@
 # Face Recognition Pro 🔍
 
-A professional, production-ready face recognition system built with:
-- **Backend**: Python + Flask + DeepFace
-- **Frontend**: React + Tailwind CSS + Vite
+A full-stack face recognition application that supports face detection, face recognition, dataset management, model training, and real-time webcam recognition.
+
+## 🚀 Tech Stack
+
+### Backend
+- Python
+- Flask
+- OpenCV
+- Haar Cascade
+- DeepFace
+- NumPy
+- Pillow
+
+### Frontend
+- React
+- Vite
+- Tailwind CSS
+- Axios
+- React Router
+- React Dropzone
+- React Hot Toast
+- Lucide React
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 face_recognition_pro/
 │
 ├── backend/
-│   ├── app.py                   ← Flask entry point
-│   ├── config.py                ← All settings (paths, thresholds)
+│   ├── app.py
+│   ├── config.py
 │   ├── requirements.txt
-│   ├── capture_faces.py         ← Standalone webcam capture script
-│   │
+│   ├── capture_faces.py
 │   ├── routes/
-│   │   ├── face_routes.py       ← /api/face/*
-│   │   ├── dataset_routes.py    ← /api/dataset/*
-│   │   └── stream_routes.py     ← /api/stream/*
-│   │
+│   │   ├── face_routes.py
+│   │   ├── dataset_routes.py
+│   │   └── stream_routes.py
 │   ├── services/
-│   │   ├── face_service.py      ← DeepFace recognition logic
-│   │   ├── training_service.py  ← Model training logic
-│   │   └── camera_service.py    ← Webcam MJPEG streaming
-│   │
+│   │   ├── face_service.py
+│   │   ├── training_service.py
+│   │   └── camera_service.py
 │   ├── Cascades/
 │   │   └── haarcascade_frontalface_default.xml
-│   │
-│   ├── dataset/                 ← Face images (auto-created)
-│   │   └── PersonName/
-│   │       └── *.jpg
-│   │
-│   └── trainer/                 ← Trained model (auto-created)
-│       ├── trainer.yml
-│       └── names.json
+│   ├── dataset/
+│   └── trainer/
 │
 └── frontend/
     ├── index.html
     ├── package.json
+    ├── package-lock.json
     ├── vite.config.js
     ├── tailwind.config.js
+    ├── postcss.config.js
     └── src/
-        ├── App.jsx
         ├── main.jsx
+        ├── App.jsx
         ├── index.css
         ├── api/
         │   └── client.js
@@ -54,186 +66,218 @@ face_recognition_pro/
         └── pages/
             ├── Dashboard.jsx
             ├── RecognizePage.jsx
-            ├── LivePage.jsx
-            └── DatasetPage.jsx
-```
+            ├── DatasetPage.jsx
+            └── LivePage.jsx
+🧠 How It Works
+User
+ │
+ ▼
+React Frontend
+ │
+ │ HTTP Requests
+ ▼
+Flask REST API
+ │
+ ├── Dataset Management
+ ├── Face Detection
+ ├── Face Recognition
+ └── Live Camera
+ │
+ ▼
+OpenCV / DeepFace
+ │
+ ▼
+Result
+ │
+ ▼
+React UI
+✨ Features
 
----
+1. Dataset Management
 
-## 🚀 How to Run
+Users can add a person's name and upload multiple face images.
 
-### Prerequisites
-- Python 3.9 or higher
-- Node.js 18 or higher
-- A webcam (for live feed)
+dataset/
+├── Nisha/
+│   ├── image1.jpg
+│   ├── image2.jpg
+│   └── image3.jpg
+└── Person2/
+    ├── image1.jpg
+    └── image2.jpg
 
----
+Users can also view the known persons, image counts, delete a person, and train the model.
 
-### Step 1 — Backend Setup
+2. Face Detection
 
-```bash
-# Open a terminal and go to the backend folder
+The system detects faces and returns their locations using OpenCV and Haar Cascade.
+
+Detection answers:
+
+"Where is the face?"
+
+3. Face Recognition
+
+The system identifies whether a detected face belongs to a known person using DeepFace.
+
+Recognition answers:
+
+"Whose face is this?"
+
+4. Live Recognition
+
+The webcam can operate in:
+
+Off — stream stopped
+Detect — detects faces and displays bounding boxes
+Recognize — detects and recognizes known persons
+
+The processed video is delivered to the frontend as an MJPEG stream.
+
+🔄 Recognition Flow
+Upload Image
+     ↓
+React
+     ↓
+Axios
+     ↓
+Flask API
+     ↓
+Face Detection
+     ↓
+DeepFace Recognition
+     ↓
+Compare with Known Persons
+     ↓
+Person / Unknown
+     ↓
+Result returned to React
+
+🔌 API Endpoints
+Method	Endpoint	Purpose
+POST	/api/face/detect	Detect faces
+POST	/api/face/recognize	Recognize faces
+POST	/api/face/train	Train/prepare recognition system
+GET	/api/face/model-info	Get model information
+POST	/api/dataset/upload	Upload person images
+GET	/api/dataset/persons	Get known persons
+GET	/api/dataset/stats	Get dataset statistics
+DELETE	/api/dataset/delete/<name>	Delete person's data
+GET	/api/stream/video_feed	Live video stream
+POST	/api/stream/mode/<mode>	Change stream mode
+
+
+🖥️ Frontend
+
+The React application contains four main pages:
+
+Dashboard — model status, dataset statistics and quick actions
+Recognize — upload an image and detect/recognize faces
+Dataset — add persons, upload images and train
+Live Feed — real-time webcam detection/recognition
+Frontend Architecture
+index.html
+    ↓
+main.jsx
+    ↓
+App.jsx
+    ↓
+React Router
+    ↓
+Pages + Navbar
+    ↓
+api/client.js
+    ↓
+Flask Backend
+
+Axios is centralized in client.js so all API communication is handled consistently.
+
+🐍 Backend
+
+The Flask backend is divided into routes and services.
+
+Routes
+   ↓
+Services
+   ↓
+OpenCV / DeepFace
+   ↓
+Dataset / Recognition
+Routes
+face_routes.py — face detection, recognition and training
+dataset_routes.py — dataset operations
+stream_routes.py — live streaming operations
+Services
+face_service.py — face processing and recognition
+training_service.py — training/recognition preparation
+camera_service.py — webcam and live frame processing
+
+
+🔍 Haar Cascade vs DeepFace
+
+Haar Cascade is mainly used for face detection.
+
+Image → Haar Cascade → Face Location
+
+DeepFace is used for face recognition.
+
+Face → DeepFace → Facial Representation → Matching
+
+Therefore, detection and recognition are separate stages of the system.
+
+⚙️ Installation
+Backend
 cd face_recognition_pro/backend
 
-# Create a virtual environment (recommended)
 python -m venv venv
 
-# Activate it
-# On Windows:
+# Windows
 venv\Scripts\activate
-# On Mac/Linux:
-source venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
 
-# Start the Flask server
 python app.py
-```
 
-Backend will run at → **http://localhost:5000**
+Backend runs on:
 
----
+http://localhost:5000
+Frontend
 
-### Step 2 — Frontend Setup
+Open another terminal:
 
-```bash
-# Open a NEW terminal and go to the frontend folder
 cd face_recognition_pro/frontend
 
-# Install Node dependencies
 npm install
 
-# Start the development server
 npm run dev
-```
 
-Frontend will run at → **http://localhost:3000**
+Frontend runs on:
 
-Open your browser and go to **http://localhost:3000**
+http://localhost:3000
+📸 Basic Usage
+Start the Flask backend.
+Start the React frontend.
+Open http://localhost:3000.
+Go to Dataset.
+Add a person's name and upload face images.
+Click Train Model.
+Go to Recognize and upload an image.
+Select Recognize to identify a person.
+Go to Live Feed for real-time webcam recognition.
+🔗 Frontend–Backend Connection
 
----
+Vite proxies /api requests from React to Flask.
 
-### Step 3 — Add Faces to Dataset
+React
+localhost:3000
+     │
+     │ /api/...
+     ▼
+Vite Proxy
+     │
+     ▼
+Flask
+localhost:5000
 
-**Option A — Via Web UI (Recommended):**
-1. Go to **Dataset** page in the browser
-2. Enter a person's name
-3. Drop in 20–50 photos of that person
-4. Click **Upload Images**
-5. Click **Train Model** (top right)
 
-**Option B — Via Webcam Script:**
-```bash
-# From backend/ folder with venv active
-python capture_faces.py
-# Enter the person's name when prompted
-# The script captures 40 face images from your webcam
-# Then click "Train Model" in the UI or run training via API
-```
 
-**Option C — Copy existing dataset (legacy format):**
-```
-backend/dataset/User.1.1.jpg
-backend/dataset/User.1.2.jpg   ← ID 1 = Person 1
-backend/dataset/User.2.1.jpg   ← ID 2 = Person 2
-```
-Then click **Train Model**.
-
----
-
-### Step 4 — Recognize Faces
-
-1. Go to **Recognize** page
-2. Upload any photo
-3. Click **Recognize**
-4. See results with confidence scores
-
-### Step 5 — Live Camera Feed
-
-1. Go to **Live Feed** page
-2. Click **Detect** or **Recognize**
-3. Your webcam stream appears with face overlays
-
----
-
-## 🔌 API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/face/detect` | Detect faces in uploaded image |
-| POST | `/api/face/recognize` | Recognize faces in uploaded image |
-| POST | `/api/face/train` | Load DeepFace embeddings from dataset |
-| GET | `/api/face/model-info` | Model status & known persons |
-| POST | `/api/dataset/upload` | Upload images for a person |
-| GET | `/api/dataset/persons` | List all persons in dataset |
-| GET | `/api/dataset/stats` | Dataset statistics |
-| DELETE | `/api/dataset/delete/<name>` | Delete a person's data |
-| GET | `/api/stream/video_feed` | MJPEG live stream |
-| POST | `/api/stream/mode/<mode>` | Set stream mode (none/detect/recognize) |
-
----
-
-## ⚠️ Special Cases
-
-### Twins / Look-alikes
-- DeepFace may struggle with identical twins
-- **Suggestion**: When confidence is between 60–85%, trigger a secondary verification (e.g. ask for ID, OTP, or voice input)
-
-### Facial Changes (glasses, beard, injury)
-- Upload multiple variants per person (with/without glasses, different lighting, different expressions)
-- More samples = more robust model
-
-### Unknown persons
-- Any face with confidence below threshold is labelled "Unknown"
-- Confidence threshold is set in `config.py` → `CONFIDENCE_THRESHOLD = 70`
-
----
-
-## ⚙️ Configuration (backend/config.py)
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `CONFIDENCE_THRESHOLD` | 70 | Lower = stricter matching |
-| `SAMPLES_PER_PERSON` | 40 | Target samples when using capture script |
-| `IMG_SIZE` | (200, 200) | Face ROI size for preprocessing |
-
----
-
-## 🏭 Deployment
-
-### Backend (Production)
-```bash
-pip install gunicorn
-gunicorn -w 2 -b 0.0.0.0:5000 "app:create_app()"
-```
-
-### Frontend (Production Build)
-```bash
-npm run build
-# Serve the dist/ folder with any static server
-# e.g. nginx, or: npx serve dist
-```
-
-### Docker (optional)
-You can containerise each service. A basic `Dockerfile` per service is recommended.
-
----
-
-## 📦 Dependencies
-
-**Backend:**
-- `flask` — Web framework
-- `flask-cors` — Cross-origin support
-- `opencv-contrib-python` — Face detection + Haar cascade
-- `deepface` — Deep learning face recognition
-- `numpy` — Array operations
-- `Pillow` — Image loading
-
-**Frontend:**
-- `react` + `react-router-dom` — SPA routing
-- `tailwindcss` — Utility CSS
-- `axios` — HTTP client
-- `react-dropzone` — Drag & drop uploads
-- `react-hot-toast` — Notifications
-- `lucide-react` — Icons
